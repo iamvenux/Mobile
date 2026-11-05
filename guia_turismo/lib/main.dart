@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'controller/auth_controller.dart';
 import 'controller/foto_controller.dart';
 import 'controller/lugares_controller.dart';
+import 'controller/mapa_controller.dart';
 import 'controller/tema_controller.dart';
 import 'rotas.dart';
 import 'screens/home_screen.dart';
@@ -33,6 +34,7 @@ class GuiaTurismoApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TemaController()),
         ChangeNotifierProvider(create: (_) => AuthController()),
         ChangeNotifierProvider(create: (_) => LugaresController()),
+        ChangeNotifierProvider(create: (_) => MapaController()),
         ChangeNotifierProvider(create: (_) => FotoController()),
       ],
       child: Consumer<TemaController>(

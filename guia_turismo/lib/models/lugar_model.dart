@@ -27,6 +27,24 @@ IconData iconeDaCategoria(int categoriaId) {
   }
 }
 
+/// Cor do pin no mapa para cada categoria (identidade visual do app).
+Color corDaCategoria(int categoriaId) {
+  switch (categoriaId) {
+    case 1:
+      return const Color(0xFF0288D1); // Praias - azul mar
+    case 2:
+      return const Color(0xFF8E24AA); // Points - roxo
+    case 3:
+      return const Color(0xFF2E7D32); // Ilhas - verde mata
+    case 4:
+      return const Color(0xFFEF6C00); // Gastronomia - laranja
+    case 5:
+      return const Color(0xFFF9A825); // Dicas - amarelo
+    default:
+      return const Color(0xFF00897B); // teal do tema
+  }
+}
+
 double _paraDouble(dynamic valor) {
   if (valor is num) return valor.toDouble();
   if (valor is String) return double.tryParse(valor.replaceAll(',', '.')) ?? 0;
@@ -65,6 +83,9 @@ class Lugar {
       categoriaId: json['categoriaId'] as int? ?? 0,
     );
   }
+
+  /// Lugares sem coordenada (0, 0) não aparecem no mapa.
+  bool get temCoordenada => latitude != 0 || longitude != 0;
 
   /// Converte o objeto em JSON para enviar à API.
   Map<String, dynamic> toJson() => {

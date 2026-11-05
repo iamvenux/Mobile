@@ -5,7 +5,8 @@ import '../services/lugares_service.dart';
 import '../services/session_service.dart';
 
 class LugaresController extends ChangeNotifier {
-  final LugaresService _service = LugaresService();
+  // Busca até 50 lugares para o mapa mostrar todos (a API pagina).
+  final LugaresService _service = LugaresService(limite: 50);
   final SessionService _sessao = SessionService();
 
   bool carregando = false; // buscando a lista

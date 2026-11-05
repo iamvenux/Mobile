@@ -70,5 +70,7 @@
 	<string>O app precisa acessar sua camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>O app precisa acessar sua Galeria</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>O app usa sua localização para mostrar onde você está no mapa</string>
 </dict>
 </plist>

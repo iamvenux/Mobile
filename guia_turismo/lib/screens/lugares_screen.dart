@@ -106,6 +106,7 @@ class LugaresScreen extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'lugares_novo',
         onPressed: () => _abrirFormulario(context),
         icon: const Icon(Icons.add_location_alt),
         label: const Text('Novo lugar'),

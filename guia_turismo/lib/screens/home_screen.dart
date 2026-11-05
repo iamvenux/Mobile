@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../controller/auth_controller.dart';
+import '../controller/mapa_controller.dart';
 import '../controller/tema_controller.dart';
 import '../rotas.dart';
 import '../services/session_service.dart';
 import 'foto_screen.dart';
 import 'lugares_screen.dart';
+import 'mapa_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,19 +19,34 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _aba = 0;
+  bool _pediuGps = false;
+
+  static const int _abaMapa = 1;
 
   static const List<String> _titulos = [
     'Guia Turismo',
-    'Foto',
+    'Mapa dos lugares',
     'Lugares para visitar',
+    'Foto',
   ];
 
   // IndexedStack mantém o estado de cada aba ao alternar entre elas
   static const List<Widget> _abas = [
     _Boasvindas(),
-    FotoScreen(),
+    MapaScreen(),
     LugaresScreen(),
+    FotoScreen(),
   ];
+
+  void _trocarAba(int i) {
+    setState(() => _aba = i);
+
+    // Só pede a permissão de localização quando o usuário abre o mapa
+    if (i == _abaMapa && !_pediuGps) {
+      _pediuGps = true;
+      context.read<MapaController>().buscarLocal();
+    }
+  }
 
   Future<void> _sair() async {
     final auth = context.read<AuthController>();
@@ -61,11 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(index: _aba, children: _abas),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _aba,
-        onDestinationSelected: (i) => setState(() => _aba = i),
+        onDestinationSelected: _trocarAba,
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: 'Início'),
-          NavigationDestination(icon: Icon(Icons.camera_alt), label: 'Foto'),
+          NavigationDestination(icon: Icon(Icons.map), label: 'Mapa'),
           NavigationDestination(icon: Icon(Icons.place), label: 'Locais'),
+          NavigationDestination(icon: Icon(Icons.camera_alt), label: 'Foto'),
         ],
       ),
     );
@@ -96,6 +114,8 @@ class _Boasvindas extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const Text('Descubra e cadastre lugares para visitar.'),
+              const SizedBox(height: 4),
+              const Text('Veja todos eles na aba Mapa.'),
             ],
           );
         },
