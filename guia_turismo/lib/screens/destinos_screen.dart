@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/controllers/destinos_controle.dart';
-import 'package:guia_turismo/controllers/imagem_controle.dart';
-import 'package:guia_turismo/models/destino_modelo.dart';
-import 'package:guia_turismo/services/busca_cep.dart';
+import 'package:guia_turismo/controllers/destinos_controller.dart';
+import 'package:guia_turismo/controllers/imagem_controller.dart';
+import 'package:guia_turismo/models/destino_model.dart';
+import 'package:guia_turismo/services/busca_cep_service.dart';
 import 'package:guia_turismo/widgets/card_destino.dart';
 import 'package:provider/provider.dart';
 
 // aba dos destinos: lista os lugares da api e tem o botao + p/ cadastrar um novo
 // o cadastro tem foto (camera ou galeria), q fica salva no celular ligada ao lugar
-class TelaDestinos extends StatefulWidget {
-  const TelaDestinos({super.key});
+class DestinosScreen extends StatefulWidget {
+  const DestinosScreen({super.key});
 
   @override
-  State<TelaDestinos> createState() => _TelaDestinosState();
+  State<DestinosScreen> createState() => _DestinosScreenState();
 }
 
-class _TelaDestinosState extends State<TelaDestinos> {
+class _DestinosScreenState extends State<DestinosScreen> {
   // controllers dos campos do formulario
   final _nome = TextEditingController();
   final _descricao = TextEditingController();
@@ -45,7 +45,7 @@ class _TelaDestinosState extends State<TelaDestinos> {
     _latitude.clear();
     _longitude.clear();
     _categoriaId = 1;
-    context.read<ImagemControle>().limpar(); // tira a foto do cadastro anterior
+    context.read<ImagemController>().limpar(); // tira a foto do cadastro anterior
 
     // o formulario eh um modal q sobe de baixo
     showModalBottomSheet(
@@ -76,8 +76,8 @@ class _TelaDestinosState extends State<TelaDestinos> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
-                // foto do lugar: escuta o imagem_controle p/ mostrar a foto escolhida
-                Consumer<ImagemControle>(
+                // foto do lugar: escuta o imagem_controller p/ mostrar a foto escolhida
+                Consumer<ImagemController>(
                   builder: (context, imagem, _) => _CaixaFoto(imagem: imagem),
                 ),
                 const SizedBox(height: 16),
@@ -192,11 +192,11 @@ class _TelaDestinosState extends State<TelaDestinos> {
     );
   }
 
-  // busca o cep usando o servico busca_cep (viacep + nominatim) e preenche lat/long
+  // busca o cep usando o servico busca_cep_service (viacep + nominatim) e preenche lat/long
   Future<void> _buscarCep(BuildContext contextoForm) async {
     String mensagem;
     try {
-      final local = await BuscaCep().buscar(_cep.text);
+      final local = await BuscaCepService().buscar(_cep.text);
       if (local == null) {
         mensagem = 'CEP não encontrado';
       } else {
@@ -211,7 +211,7 @@ class _TelaDestinosState extends State<TelaDestinos> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(mensagem)));
   }
 
-  // botao salvar: valida, monta o destino e manda p/ o destinos_controle cadastrar
+  // botao salvar: valida, monta o destino e manda p/ o destinos_controller cadastrar
   Future<void> _salvar(
     BuildContext contextoForm,
     StateSetter atualizar,
@@ -232,7 +232,7 @@ class _TelaDestinosState extends State<TelaDestinos> {
     }
 
     // monta o destino c/ o q foi digitado
-    final novo = DestinoModelo(
+    final novo = DestinoModel(
       id: 0, // o id quem gera eh a api, manda 0 so p/ preencher
       nome: _nome.text.trim(),
       descricao: _descricao.text.trim(),
@@ -242,8 +242,8 @@ class _TelaDestinosState extends State<TelaDestinos> {
     );
 
     // pega os controles antes do await (dps do await o context pode n existir mais)
-    final destinos = context.read<DestinosControle>();
-    final foto = context.read<ImagemControle>().imagem; // foto escolhida (pode ser null)
+    final destinos = context.read<DestinosController>();
+    final foto = context.read<ImagemController>().imagem; // foto escolhida (pode ser null)
     atualizar(() => _salvando = true);
     // chama o controle, ele manda p/ api c/ o token, recarrega a lista e salva a foto
     final deuCerto = await destinos.cadastrarDestino(novo, foto: foto);
@@ -260,8 +260,8 @@ class _TelaDestinosState extends State<TelaDestinos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // lista: escuta o destinos_controle e mostra conforme o estado dele
-      body: Consumer<DestinosControle>(
+      // lista: escuta o destinos_controller e mostra conforme o estado dele
+      body: Consumer<DestinosController>(
         builder: (context, destinos, _) {
           // 1a vez carregando: bolinha girando
           if (destinos.carregando && destinos.destinos.isEmpty) {
@@ -317,7 +317,7 @@ class _TelaDestinosState extends State<TelaDestinos> {
 // caixa da foto dentro do formulario c/ os botoes de camera e galeria
 // separei num widget so p/ o formulario n ficar gigante
 class _CaixaFoto extends StatelessWidget {
-  final ImagemControle imagem;
+  final ImagemController imagem;
 
   const _CaixaFoto({required this.imagem});
 
@@ -350,7 +350,7 @@ class _CaixaFoto extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        // botoes q chamam o imagem_controle (q chama o servico seletor_imagem)
+        // botoes q chamam o imagem_controller (q chama o servico seletor_imagem_service)
         Row(
           children: [
             Expanded(

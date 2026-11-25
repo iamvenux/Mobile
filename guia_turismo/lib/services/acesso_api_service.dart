@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 // faz o login na api da prof c/ email e senha
-// quem chama eh o login_controle
-class AcessoApi {
+// quem chama eh o login_controller
+class AcessoApiService {
   final String url = 'https://guia.liliaborges.com.br/login';
 
   // manda email e senha e devolve os dados {token, usuario}

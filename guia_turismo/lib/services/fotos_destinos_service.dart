@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 // funciona assim:
 // 1- copia a foto p/ a pasta do app (a do image_picker eh temporaria e pode sumir)
 // 2- salva no shared_preferences qual foto eh de qual lugar (pelo id)
-// quem chama eh o destinos_controle
-class FotosDestinos {
+// quem chama eh o destinos_controller
+class FotosDestinosService {
   // copia a foto e liga ela no id do lugar, devolve o caminho novo
   Future<String> salvar(int idDestino, File foto) async {
     final pasta = await getApplicationDocumentsDirectory(); // pasta q so o app usa

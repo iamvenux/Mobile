@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:guia_turismo/controllers/destinos_controle.dart';
-import 'package:guia_turismo/controllers/localizacao_controle.dart';
+import 'package:guia_turismo/controllers/destinos_controller.dart';
+import 'package:guia_turismo/controllers/localizacao_controller.dart';
 import 'package:guia_turismo/widgets/detalhes_destino.dart';
 import 'package:guia_turismo/widgets/marcador_destino.dart';
 import 'package:latlong2/latlong.dart';
@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 // aba do mapa: mostra onde o usuario ta e um pin p/ cada destino da api
 // o pin mostra a foto do lugar (se tiver) e tocando abre os detalhes
 // eh stateless pq quem guarda as coisas sao os controles
-class TelaMapa extends StatelessWidget {
-  const TelaMapa({super.key});
+class MapaScreen extends StatelessWidget {
+  const MapaScreen({super.key});
 
   // se o gps ainda n respondeu, o mapa abre no centro de sp
   static const LatLng _centroPadrao = LatLng(-23.5505, -46.6333);
@@ -20,7 +20,7 @@ class TelaMapa extends StatelessWidget {
   Widget build(BuildContext context) {
     // Consumer2 escuta 2 controles ao msm tempo:
     // o de localizacao (gps) e o de destinos (p/ fazer os pins)
-    return Consumer2<LocalizacaoControle, DestinosControle>(
+    return Consumer2<LocalizacaoController, DestinosController>(
       builder: (context, localizacao, destinos, _) => Scaffold(
         // Stack p/ colocar o aviso de erro e o carregando por cima do mapa
         body: Stack(

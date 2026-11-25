@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/controllers/login_controle.dart';
+import 'package:guia_turismo/controllers/login_controller.dart';
 import 'package:provider/provider.dart';
 
 // tela de login, eh a 1a tela q abre se ninguem ta logado
 // da p/ entrar c/ email e senha (api) ou c/ o google (firebase)
 // login de teste da api: lilia@teste.com | senha123
-class TelaEntrada extends StatefulWidget {
-  const TelaEntrada({super.key});
+class EntradaScreen extends StatefulWidget {
+  const EntradaScreen({super.key});
 
   @override
-  State<TelaEntrada> createState() => _TelaEntradaState();
+  State<EntradaScreen> createState() => _EntradaScreenState();
 }
 
 // é stateful pq tem coisa q muda na tela (mostrar/esconder senha)
-class _TelaEntradaState extends State<TelaEntrada> {
+class _EntradaScreenState extends State<EntradaScreen> {
   // controllers pegam o q o usuario digita nos campos
   final _email = TextEditingController();
   final _senha = TextEditingController();
@@ -27,8 +27,8 @@ class _TelaEntradaState extends State<TelaEntrada> {
     super.dispose();
   }
 
-  // botao entrar: chama o login_controle, se deu certo vai p/ tela principal
-  Future<void> _entrar(LoginControle login) async {
+  // botao entrar: chama o login_controller, se deu certo vai p/ tela principal
+  Future<void> _entrar(LoginController login) async {
     final entrou = await login.entrar(_email.text, _senha.text);
     // mounted = a tela ainda ta aberta (pq teve um await antes)
     // pushReplacement troca a tela, ai o voltar do celular n volta p/ o login
@@ -38,7 +38,7 @@ class _TelaEntradaState extends State<TelaEntrada> {
   }
 
   // msm coisa mas c/ o google
-  Future<void> _entrarComGoogle(LoginControle login) async {
+  Future<void> _entrarComGoogle(LoginController login) async {
     final entrou = await login.entrarComGoogle();
     if (entrou && mounted) {
       Navigator.pushReplacementNamed(context, 'principal');
@@ -52,9 +52,9 @@ class _TelaEntradaState extends State<TelaEntrada> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Entrar')),
-      // o Consumer escuta o login_controle, qnd ele avisa (notifyListeners) a tela redesenha
+      // o Consumer escuta o login_controller, qnd ele avisa (notifyListeners) a tela redesenha
       // ex: aparece a bolinha de carregando ou a msg de erro
-      body: Consumer<LoginControle>(
+      body: Consumer<LoginController>(
         builder: (context, login, _) => Center(
           child: SingleChildScrollView( // deixa rolar qnd o teclado abre, se n da overflow
             padding: const EdgeInsets.all(24),

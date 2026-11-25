@@ -1,22 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/models/destino_modelo.dart';
-import 'package:guia_turismo/services/armazenamento_local.dart';
-import 'package:guia_turismo/services/destinos_api.dart';
-import 'package:guia_turismo/services/fotos_destinos.dart';
+import 'package:guia_turismo/models/destino_model.dart';
+import 'package:guia_turismo/services/armazenamento_local_service.dart';
+import 'package:guia_turismo/services/destinos_api_service.dart';
+import 'package:guia_turismo/services/fotos_destinos_service.dart';
 
 // controle dos destinos: busca a lista da api, cadastra novos,
 // cuida dos favoritos e das fotos de cada lugar
-// quem usa eh a tela_destinos, a tela_favoritos e a tela_mapa
-class DestinosControle extends ChangeNotifier {
-  final DestinosApi _api = DestinosApi(); // servico q faz as requisiçoes de vdd
-  final FotosDestinos _fotosServico = FotosDestinos(); // salva as fotos no celular
-  final ArmazenamentoLocal _armazenamento = ArmazenamentoLocal();
+// quem usa eh a destinos_screen, a favoritos_screen e a mapa_screen
+class DestinosController extends ChangeNotifier {
+  final DestinosApiService _api = DestinosApiService(); // servico q faz as requisiçoes de vdd
+  final FotosDestinosService _fotosServico = FotosDestinosService(); // salva as fotos no celular
+  final ArmazenamentoLocalService _armazenamento = ArmazenamentoLocalService();
 
   bool carregando = false; // p/ mostrar a bolinha girando
   String erro = '';
-  List<DestinoModelo> _destinos = [];
-  List<DestinoModelo> get destinos => _destinos;
+  List<DestinoModel> _destinos = [];
+  List<DestinoModel> get destinos => _destinos;
 
   // ids dos lugares favoritados (Set pq n pode ter repetido)
   Set<int> _favoritos = {};
@@ -24,7 +24,7 @@ class DestinosControle extends ChangeNotifier {
   Map<int, String> _fotos = {};
 
   // assim q o controle eh criado (no main) ja busca a lista e carrega favoritos/fotos
-  DestinosControle() {
+  DestinosController() {
     _carregarSalvos();
     listarDestinos();
   }
@@ -61,7 +61,7 @@ class DestinosControle extends ChangeNotifier {
   bool ehFavorito(int id) => _favoritos.contains(id);
 
   // so os lugares q tao favoritados (a aba favoritos usa)
-  List<DestinoModelo> get favoritos =>
+  List<DestinoModel> get favoritos =>
       _destinos.where((destino) => _favoritos.contains(destino.id)).toList();
 
   // clicou no coracao: se ja era favorito tira, se n era coloca
@@ -91,7 +91,7 @@ class DestinosControle extends ChangeNotifier {
 
   // chamado pelo botao salvar do formulario (a foto eh opcional)
   // devolve true se cadastrou, ai a tela fecha o form
-  Future<bool> cadastrarDestino(DestinoModelo destino, {File? foto}) async {
+  Future<bool> cadastrarDestino(DestinoModel destino, {File? foto}) async {
     // pega o token q foi salvo no login, a api so deixa cadastrar c/ ele
     final token = await _armazenamento.pegarToken() ?? '';
     try {
@@ -119,7 +119,7 @@ class DestinosControle extends ChangeNotifier {
 
   // caso a api n mande o id do lugar novo, procura na lista um c/ o msm nome e coordenadas
   // (se tiver mais de um pega o de maior id, q eh o mais novo)
-  int? _acharIdDoNovo(DestinoModelo destino) {
+  int? _acharIdDoNovo(DestinoModel destino) {
     final iguais = _destinos.where(
       (d) =>
           d.nome == destino.nome &&

@@ -3,7 +3,7 @@ import 'package:guia_turismo/widgets/estilo_widgets.dart';
 
 // controla o tema do app (rosa claro e rosa escuro) e o botao de trocar
 // as funcoes de estilo de cada componente tao no estilo_widgets.dart
-class AparenciaControle extends ChangeNotifier {
+class AparenciaController extends ChangeNotifier {
   // minhas cores rosas
   static const Color rosaPastel = Color(0xFFF8BBD0); // cor principal
   static const Color rosaClarinho = Color(0xFFFDE4EC); // fundinho das coisas no modo claro

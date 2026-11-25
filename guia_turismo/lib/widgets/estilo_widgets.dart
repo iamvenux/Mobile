@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // esse arquivo so existe p/ deixar cada componente c/ a cara rosa
-// quem chama essas funcoes eh o _montarTema do aparencia_controle
+// quem chama essas funcoes eh o _montarTema do aparencia_controller
 // (o "cor" eh a paleta rosa q ele monta e passa p/ ca)
 
 // barra do topo

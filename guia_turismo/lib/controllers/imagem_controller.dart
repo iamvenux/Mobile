@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/services/seletor_imagem.dart';
+import 'package:guia_turismo/services/seletor_imagem_service.dart';
 
 // guarda a foto q o usuario tirou ou escolheu da galeria
-// o formulario de cadastro (tela_destinos) escuta esse controle p/ mostrar a imagem
-class ImagemControle extends ChangeNotifier {
-  final SeletorImagem _seletor = SeletorImagem(); // servico q abre a camera/galeria
+// o formulario de cadastro (destinos_screen) escuta esse controle p/ mostrar a imagem
+class ImagemController extends ChangeNotifier {
+  final SeletorImagemService _seletor = SeletorImagemService(); // servico q abre a camera/galeria
   bool carregando = false;
   File? _imagem; // comeca vazia (null)
   File? get imagem => _imagem;

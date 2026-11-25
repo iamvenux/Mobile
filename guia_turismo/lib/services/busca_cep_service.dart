@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 // 1- o viacep diz qual eh a rua, cidade e estado do cep
 // 2- o nominatim (do openstreetmap) pega esse endereco e devolve as coordenadas
 // (precisa do viacep pq o nominatim n tem td os ceps cadastrados)
-class BuscaCep {
+class BuscaCepService {
   // o nominatim exige q o app se identifique, se n ele bloqueia
   static const _cabecalho = {'User-Agent': 'GuiaTurismoRosa/1.0'};
 

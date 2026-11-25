@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 
 // login c/ a conta google pelo firebase (baseado no codigo teste da prof)
-// quem chama eh o login_controle
-class LoginGoogle {
+// quem chama eh o login_controller
+class LoginGoogleService {
   // o google_sign_in so pode dar initialize uma vez, essa variavel controla isso
   static bool _iniciado = false;
 

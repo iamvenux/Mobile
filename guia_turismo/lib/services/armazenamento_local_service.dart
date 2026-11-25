@@ -2,7 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // salva coisas no proprio celular (shared_preferences)
 // assim msm fechando o app o usuario continua logado
-class ArmazenamentoLocal {
+class ArmazenamentoLocalService {
   // token q a api devolve no login, precisa dele p/ cadastrar destinos
   Future<void> salvarToken(String token) async {
     final prefs = await SharedPreferences.getInstance();

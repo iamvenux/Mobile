@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:guia_turismo/services/posicao_gps.dart';
+import 'package:guia_turismo/services/posicao_gps_service.dart';
 import 'package:latlong2/latlong.dart';
 
 // controla onde o usuario ta (gps) e mexe no mapa
-class LocalizacaoControle extends ChangeNotifier {
-  final PosicaoGps _gps = PosicaoGps(); // servico q pega a posicao do celular
-  final MapController mapa = MapController(); // controle do mapa, a tela_mapa usa ele no FlutterMap
+class LocalizacaoController extends ChangeNotifier {
+  final PosicaoGpsService _gps = PosicaoGpsService(); // servico q pega a posicao do celular
+  final MapController mapa = MapController(); // controle do mapa, a mapa_screen usa ele no FlutterMap
 
   LatLng? atual; // posicao do usuario, null ate o gps responder
   bool carregando = false;
   String erro = '';
 
   // ja busca a posicao assim q o app abre
-  LocalizacaoControle() {
+  LocalizacaoController() {
     buscarPosicao();
   }
 

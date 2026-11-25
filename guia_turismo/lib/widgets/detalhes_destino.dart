@@ -1,16 +1,16 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/controllers/destinos_controle.dart';
-import 'package:guia_turismo/controllers/localizacao_controle.dart';
-import 'package:guia_turismo/models/destino_modelo.dart';
-import 'package:guia_turismo/services/compartilhar.dart';
-import 'package:guia_turismo/services/posicao_gps.dart';
+import 'package:guia_turismo/controllers/destinos_controller.dart';
+import 'package:guia_turismo/controllers/localizacao_controller.dart';
+import 'package:guia_turismo/models/destino_model.dart';
+import 'package:guia_turismo/services/compartilhar_service.dart';
+import 'package:guia_turismo/services/posicao_gps_service.dart';
 import 'package:provider/provider.dart';
 
 // abre os detalhes de um lugar num modal q sobe de baixo
 // chamado qnd toca num card da lista ou num pin do mapa
 // mostra foto, nome, categoria, descricao, distancia e os botoes favoritar/compartilhar
-void mostrarDetalhesDestino(BuildContext context, DestinoModelo destino) {
+void mostrarDetalhesDestino(BuildContext context, DestinoModel destino) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -22,13 +22,13 @@ void mostrarDetalhesDestino(BuildContext context, DestinoModelo destino) {
 }
 
 class _DetalhesDestino extends StatelessWidget {
-  final DestinoModelo destino;
+  final DestinoModel destino;
 
   const _DetalhesDestino({required this.destino});
 
   Future<void> _compartilhar(BuildContext context, String? foto) async {
     try {
-      await Compartilhar().destino(destino, foto: foto);
+      await CompartilharService().destino(destino, foto: foto);
     } catch (e) {
       // se der algum erro n trava o app, so avisa
       if (!context.mounted) return;
@@ -43,8 +43,8 @@ class _DetalhesDestino extends StatelessWidget {
     final cor = Theme.of(context).colorScheme;
     final textos = Theme.of(context).textTheme;
     // watch p/ o coracao atualizar na hr q clica
-    final destinos = context.watch<DestinosControle>();
-    final atual = context.watch<LocalizacaoControle>().atual;
+    final destinos = context.watch<DestinosController>();
+    final atual = context.watch<LocalizacaoController>().atual;
     final foto = destinos.fotoDe(destino.id);
     final favorito = destinos.ehFavorito(destino.id);
 
@@ -85,7 +85,7 @@ class _DetalhesDestino extends StatelessWidget {
                   Icon(Icons.directions_walk, size: 18, color: cor.outline),
                   const SizedBox(width: 6),
                   Text(
-                    'A ${PosicaoGps.distanciaTexto(atual, destino.latitude, destino.longitude)} de você',
+                    'A ${PosicaoGpsService.distanciaTexto(atual, destino.latitude, destino.longitude)} de você',
                   ),
                 ],
               ),

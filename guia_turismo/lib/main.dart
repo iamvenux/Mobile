@@ -3,16 +3,16 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/controllers/aparencia_controle.dart';
-import 'package:guia_turismo/controllers/destinos_controle.dart';
-import 'package:guia_turismo/controllers/imagem_controle.dart';
-import 'package:guia_turismo/controllers/localizacao_controle.dart';
-import 'package:guia_turismo/controllers/login_controle.dart';
+import 'package:guia_turismo/controllers/aparencia_controller.dart';
+import 'package:guia_turismo/controllers/destinos_controller.dart';
+import 'package:guia_turismo/controllers/imagem_controller.dart';
+import 'package:guia_turismo/controllers/localizacao_controller.dart';
+import 'package:guia_turismo/controllers/login_controller.dart';
 import 'package:guia_turismo/firebase_options.dart';
-import 'package:guia_turismo/services/armazenamento_local.dart';
-import 'package:guia_turismo/services/login_google.dart';
-import 'package:guia_turismo/screens/tela_entrada.dart';
-import 'package:guia_turismo/screens/tela_principal.dart';
+import 'package:guia_turismo/services/armazenamento_local_service.dart';
+import 'package:guia_turismo/services/login_google_service.dart';
+import 'package:guia_turismo/screens/entrada_screen.dart';
+import 'package:guia_turismo/screens/principal_screen.dart';
 import 'package:provider/provider.dart';
 
 // main eh async pq precisa esperar o firebase e o token antes de abrir o app
@@ -31,8 +31,8 @@ Future<void> main() async {
   }
 
   // ve se ja tem alguem logado: ou tem o token da api salvo ou ta logado no google
-  final token = await ArmazenamentoLocal().pegarToken();
-  final logado = (token != null && token.isNotEmpty) || LoginGoogle.logado;
+  final token = await ArmazenamentoLocalService().pegarToken();
+  final logado = (token != null && token.isNotEmpty) || LoginGoogleService.logado;
 
   // se ta logado ja abre direto na tela principal, se n vai p/ tela de login
   runApp(AppGuiaRosa(rotaInicial: logado ? 'principal' : 'entrada'));
@@ -50,14 +50,14 @@ class AppGuiaRosa extends StatelessWidget {
     // p/ qlqr tela do app (as telas pegam c/ context.read ou Consumer)
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AparenciaControle()),
-        ChangeNotifierProvider(create: (_) => LoginControle()),
-        ChangeNotifierProvider(create: (_) => DestinosControle()),
-        ChangeNotifierProvider(create: (_) => ImagemControle()),
-        ChangeNotifierProvider(create: (_) => LocalizacaoControle()),
+        ChangeNotifierProvider(create: (_) => AparenciaController()),
+        ChangeNotifierProvider(create: (_) => LoginController()),
+        ChangeNotifierProvider(create: (_) => DestinosController()),
+        ChangeNotifierProvider(create: (_) => ImagemController()),
+        ChangeNotifierProvider(create: (_) => LocalizacaoController()),
       ],
-      // o Consumer fica escutando o AparenciaControle, qnd troca o tema ele redesenha o app td
-      child: Consumer<AparenciaControle>(
+      // o Consumer fica escutando o AparenciaController, qnd troca o tema ele redesenha o app td
+      child: Consumer<AparenciaController>(
         builder: (context, aparencia, _) => MaterialApp(
           title: 'Guia Turismo',
           debugShowCheckedModeBanner: false, // tira aquela faixa de debug do canto
@@ -67,8 +67,8 @@ class AppGuiaRosa extends StatelessWidget {
           initialRoute: rotaInicial,
           // nomes das rotas e qual tela cada uma abre
           routes: {
-            'entrada': (_) => const TelaEntrada(),
-            'principal': (_) => const TelaPrincipal(),
+            'entrada': (_) => const EntradaScreen(),
+            'principal': (_) => const PrincipalScreen(),
           },
         ),
       ),

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/controllers/destinos_controle.dart';
+import 'package:guia_turismo/controllers/destinos_controller.dart';
 import 'package:guia_turismo/widgets/card_destino.dart';
 import 'package:provider/provider.dart';
 
 // aba dos favoritos: mostra so os lugares q o usuario marcou c/ o coracao
 // os favoritos ficam salvos no celular, entao continuam msm fechando o app
-class TelaFavoritos extends StatelessWidget {
-  const TelaFavoritos({super.key});
+class FavoritosScreen extends StatelessWidget {
+  const FavoritosScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final cor = Theme.of(context).colorScheme;
 
-    // escuta o destinos_controle, qnd favorita/desfavorita a lista atualiza sozinha
-    return Consumer<DestinosControle>(
+    // escuta o destinos_controller, qnd favorita/desfavorita a lista atualiza sozinha
+    return Consumer<DestinosController>(
       builder: (context, destinos, _) {
         final favoritos = destinos.favoritos;
 

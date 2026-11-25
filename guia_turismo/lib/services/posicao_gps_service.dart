@@ -3,8 +3,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 // pega a localizacao do celular pelo gps
-// quem chama eh o localizacao_controle
-class PosicaoGps {
+// quem chama eh o localizacao_controller
+class PosicaoGpsService {
   // devolve a latitude/longitude ou null se n conseguir
   Future<LatLng?> obterPosicao() async {
     // 1- ve se o gps ta ligado

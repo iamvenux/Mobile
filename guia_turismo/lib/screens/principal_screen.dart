@@ -1,30 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/controllers/aparencia_controle.dart';
-import 'package:guia_turismo/controllers/login_controle.dart';
-import 'package:guia_turismo/services/armazenamento_local.dart';
-import 'package:guia_turismo/screens/tela_destinos.dart';
-import 'package:guia_turismo/screens/tela_favoritos.dart';
-import 'package:guia_turismo/screens/tela_mapa.dart';
+import 'package:guia_turismo/controllers/aparencia_controller.dart';
+import 'package:guia_turismo/controllers/login_controller.dart';
+import 'package:guia_turismo/services/armazenamento_local_service.dart';
+import 'package:guia_turismo/screens/destinos_screen.dart';
+import 'package:guia_turismo/screens/favoritos_screen.dart';
+import 'package:guia_turismo/screens/mapa_screen.dart';
 import 'package:provider/provider.dart';
 
 // tela principal, abre dps do login
 // tem a appbar em cima e a barra de navegacao c/ 4 abas embaixo
-class TelaPrincipal extends StatefulWidget {
-  const TelaPrincipal({super.key});
+class PrincipalScreen extends StatefulWidget {
+  const PrincipalScreen({super.key});
 
   @override
-  State<TelaPrincipal> createState() => _TelaPrincipalState();
+  State<PrincipalScreen> createState() => _PrincipalScreenState();
 }
 
-class _TelaPrincipalState extends State<TelaPrincipal> {
+class _PrincipalScreenState extends State<PrincipalScreen> {
   int _abaAtual = 0; // qual aba ta aberta (0 = inicio)
 
   // conteudo de cada aba, na msm ordem dos botoes la de baixo
   final List<Widget> _abas = const [
     _BoasVindas(),
-    TelaDestinos(),
-    TelaFavoritos(),
-    TelaMapa(),
+    DestinosScreen(),
+    FavoritosScreen(),
+    MapaScreen(),
   ];
 
   // titulo q aparece na appbar p/ cada aba
@@ -35,10 +35,10 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     'Mapa',
   ];
 
-  // botao sair: chama o login_controle (q apaga o token e sai do google)
+  // botao sair: chama o login_controller (q apaga o token e sai do google)
   // e volta p/ tela de login
   Future<void> _sair() async {
-    await context.read<LoginControle>().sair();
+    await context.read<LoginController>().sair();
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, 'entrada');
   }
@@ -49,8 +49,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
       appBar: AppBar(
         title: Text(_titulos[_abaAtual]), // pega o titulo pelo numero da aba
         actions: [
-          // botao de trocar tema claro/escuro, chama o trocarTema do aparencia_controle
-          Consumer<AparenciaControle>(
+          // botao de trocar tema claro/escuro, chama o trocarTema do aparencia_controller
+          Consumer<AparenciaController>(
             builder: (context, aparencia, _) => IconButton(
               tooltip: 'Trocar tema',
               onPressed: aparencia.trocarTema,
@@ -108,7 +108,7 @@ class _BoasVindas extends StatelessWidget {
   Widget build(BuildContext context) {
     final cor = Theme.of(context).colorScheme;
 
-    final armazenamento = ArmazenamentoLocal(); // onde ficou salvo o nome/email/foto no login
+    final armazenamento = ArmazenamentoLocalService(); // onde ficou salvo o nome/email/foto no login
 
     return Center(
       child: Padding(

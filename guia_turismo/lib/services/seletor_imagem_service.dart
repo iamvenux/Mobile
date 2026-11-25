@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
 // abre a camera ou a galeria usando o image_picker
-// quem chama eh o imagem_controle
-class SeletorImagem {
+// quem chama eh o imagem_controller
+class SeletorImagemService {
   final ImagePicker _picker = ImagePicker();
 
   // a foto vem diminuida (no max 1280px e qualidade 80%)

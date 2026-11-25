@@ -9,7 +9,7 @@ const Map<int, String> categoriasDestino = {
 };
 
 // modelo de um destino (lugar turistico), eh o "formato" dos dados q vem da api
-class DestinoModelo {
+class DestinoModel {
   final int id;
   final String nome;
   final String? categoria; // ? = pode vir nulo
@@ -18,7 +18,7 @@ class DestinoModelo {
   final String? descricao;
   final int categoriaId;
 
-  DestinoModelo({
+  DestinoModel({
     required this.id,
     required this.nome,
     this.categoria = '',
@@ -35,10 +35,10 @@ class DestinoModelo {
     return categoriasDestino[categoriaId] ?? 'Outro';
   }
 
-  // transforma o json q vem da api em um DestinoModelo
+  // transforma o json q vem da api em um DestinoModel
   // os ?? sao p/ n quebrar se algum campo vier nulo
-  factory DestinoModelo.fromJson(Map json) {
-    return DestinoModelo(
+  factory DestinoModel.fromJson(Map json) {
+    return DestinoModel(
       id: json['id'] ?? 0,
       nome: json['nome'] ?? 'Sem nome',
       // a lat/long as vezes vem como texto e as vezes como numero, o tryParse aceita os dois
