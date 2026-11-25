@@ -1,53 +1,74 @@
+// arquivo principal, eh aq q o app comeca a rodar
+// obs: as permissoes de camera e gps ficam no AndroidManifest.xml (android/app/src/main)
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:guia_turismo/controladores/aparencia_controle.dart';
+import 'package:guia_turismo/controladores/destinos_controle.dart';
+import 'package:guia_turismo/controladores/imagem_controle.dart';
+import 'package:guia_turismo/controladores/localizacao_controle.dart';
+import 'package:guia_turismo/controladores/login_controle.dart';
+import 'package:guia_turismo/firebase_options.dart';
+import 'package:guia_turismo/servicos/armazenamento_local.dart';
+import 'package:guia_turismo/servicos/login_google.dart';
+import 'package:guia_turismo/telas/tela_entrada.dart';
+import 'package:guia_turismo/telas/tela_principal.dart';
 import 'package:provider/provider.dart';
 
-import 'controller/auth_controller.dart';
-import 'controller/foto_controller.dart';
-import 'controller/lugares_controller.dart';
-import 'controller/mapa_controller.dart';
-import 'controller/tema_controller.dart';
-import 'rotas.dart';
-import 'screens/home_screen.dart';
-import 'screens/login_screen.dart';
-import 'services/session_service.dart';
-import 'theme/app_theme.dart';
-
+// main eh async pq precisa esperar o firebase e o token antes de abrir o app
 Future<void> main() async {
+  // sem isso da erro qnd usa await antes do runApp
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Se já existe um token salvo, pula a tela de login.
-  final token = await SessionService().pegarToken();
-  final logado = token != null && token.isNotEmpty;
+  // liga o app no meu projeto do firebase (guia-turismo-4bd69)
+  // ta no try pq so configurei p/ android, no windows/web ele so pula e abre normal
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {
+    debugPrint('Firebase não iniciado: $e');
+  }
 
-  runApp(GuiaTurismoApp(rotaInicial: logado ? Rotas.home : Rotas.login));
+  // ve se ja tem alguem logado: ou tem o token da api salvo ou ta logado no google
+  final token = await ArmazenamentoLocal().pegarToken();
+  final logado = (token != null && token.isNotEmpty) || LoginGoogle.logado;
+
+  // se ta logado ja abre direto na tela principal, se n vai p/ tela de login
+  runApp(AppGuiaRosa(rotaInicial: logado ? 'principal' : 'entrada'));
 }
 
-class GuiaTurismoApp extends StatelessWidget {
+class AppGuiaRosa extends StatelessWidget {
+  // recebe do main qual tela abre primeiro
   final String rotaInicial;
 
-  const GuiaTurismoApp({super.key, required this.rotaInicial});
+  const AppGuiaRosa({super.key, required this.rotaInicial});
 
   @override
   Widget build(BuildContext context) {
+    // o MultiProvider cria tds os controles uma vez so e deixa eles disponiveis
+    // p/ qlqr tela do app (as telas pegam c/ context.read ou Consumer)
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => TemaController()),
-        ChangeNotifierProvider(create: (_) => AuthController()),
-        ChangeNotifierProvider(create: (_) => LugaresController()),
-        ChangeNotifierProvider(create: (_) => MapaController()),
-        ChangeNotifierProvider(create: (_) => FotoController()),
+        ChangeNotifierProvider(create: (_) => AparenciaControle()),
+        ChangeNotifierProvider(create: (_) => LoginControle()),
+        ChangeNotifierProvider(create: (_) => DestinosControle()),
+        ChangeNotifierProvider(create: (_) => ImagemControle()),
+        ChangeNotifierProvider(create: (_) => LocalizacaoControle()),
       ],
-      child: Consumer<TemaController>(
-        builder: (context, tema, _) => MaterialApp(
+      // o Consumer fica escutando o AparenciaControle, qnd troca o tema ele redesenha o app td
+      child: Consumer<AparenciaControle>(
+        builder: (context, aparencia, _) => MaterialApp(
           title: 'Guia Turismo',
-          debugShowCheckedModeBanner: false,
-          theme: AppTheme.claro,
-          darkTheme: AppTheme.escuro,
-          themeMode: tema.modo,
+          debugShowCheckedModeBanner: false, // tira aquela faixa de debug do canto
+          theme: aparencia.temaClaro(),
+          darkTheme: aparencia.temaEscuro(),
+          themeMode: aparencia.modo, // claro ou escuro, depende do botao q apertou
           initialRoute: rotaInicial,
+          // nomes das rotas e qual tela cada uma abre
           routes: {
-            Rotas.login: (_) => const LoginScreen(),
-            Rotas.home: (_) => const HomeScreen(),
+            'entrada': (_) => const TelaEntrada(),
+            'principal': (_) => const TelaPrincipal(),
           },
         ),
       ),

@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Guiaapp</string>
+	<string>Guia Turismo</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>guiaapp</string>
+	<string>guia_turismo</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -70,6 +70,8 @@
 	<string>O app precisa acessar sua camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>O app precisa acessar sua Galeria</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>O app precisa acessar seu microfone ao usar a câmera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>O app usa sua localização para mostrar onde você está no mapa</string>
 </dict>
