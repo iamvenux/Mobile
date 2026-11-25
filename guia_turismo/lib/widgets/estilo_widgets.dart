@@ -27,7 +27,7 @@ BottomNavigationBarThemeData estiloNavegacao(ColorScheme cor) {
   );
 }
 
-// botoes normais (entrar, salvar, tentar novamente...)
+// botoes normais (entrar, salvar, compartilhar, tentar novamente...)
 ElevatedButtonThemeData estiloBotao(ColorScheme cor) {
   return ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
@@ -39,7 +39,7 @@ ElevatedButtonThemeData estiloBotao(ColorScheme cor) {
   );
 }
 
-// botao redondo flutuante (o de add destino, o da camera e o do gps)
+// botao redondo flutuante (o de add destino e o do gps)
 FloatingActionButtonThemeData estiloBotaoFlutuante(ColorScheme cor) {
   return FloatingActionButtonThemeData(
     backgroundColor: cor.primary,

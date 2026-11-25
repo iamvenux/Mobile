@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:guia_turismo/servicos/posicao_gps.dart';
+import 'package:guia_turismo/services/posicao_gps.dart';
 import 'package:latlong2/latlong.dart';
 
 // controla onde o usuario ta (gps) e mexe no mapa

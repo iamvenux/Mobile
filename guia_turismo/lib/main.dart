@@ -3,16 +3,16 @@
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/controladores/aparencia_controle.dart';
-import 'package:guia_turismo/controladores/destinos_controle.dart';
-import 'package:guia_turismo/controladores/imagem_controle.dart';
-import 'package:guia_turismo/controladores/localizacao_controle.dart';
-import 'package:guia_turismo/controladores/login_controle.dart';
+import 'package:guia_turismo/controllers/aparencia_controle.dart';
+import 'package:guia_turismo/controllers/destinos_controle.dart';
+import 'package:guia_turismo/controllers/imagem_controle.dart';
+import 'package:guia_turismo/controllers/localizacao_controle.dart';
+import 'package:guia_turismo/controllers/login_controle.dart';
 import 'package:guia_turismo/firebase_options.dart';
-import 'package:guia_turismo/servicos/armazenamento_local.dart';
-import 'package:guia_turismo/servicos/login_google.dart';
-import 'package:guia_turismo/telas/tela_entrada.dart';
-import 'package:guia_turismo/telas/tela_principal.dart';
+import 'package:guia_turismo/services/armazenamento_local.dart';
+import 'package:guia_turismo/services/login_google.dart';
+import 'package:guia_turismo/screens/tela_entrada.dart';
+import 'package:guia_turismo/screens/tela_principal.dart';
 import 'package:provider/provider.dart';
 
 // main eh async pq precisa esperar o firebase e o token antes de abrir o app

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:guia_turismo/modelos/destino_modelo.dart';
+import 'package:guia_turismo/models/destino_modelo.dart';
 
 // conversa c/ a api da prof p/ listar e cadastrar os lugares
 // quem chama eh o destinos_controle
@@ -26,7 +26,12 @@ class DestinosApi {
   }
 
   // POST: cadastra um destino novo, precisa do token do login
-  Future<String> cadastrarDestino(DestinoModelo destino, String token) async {
+  // devolve 2 coisas: a msg da api e o id do lugar novo (se a api mandar)
+  // o id eu preciso p/ ligar a foto no lugar certo
+  Future<(String, int?)> cadastrarDestino(
+    DestinoModelo destino,
+    String token,
+  ) async {
     // sem token a api recusa, entao ja avisa antes (acontece qnd entra pelo google)
     if (token.isEmpty) {
       throw Exception('Não autorizado: faça login com e-mail e senha.');
@@ -44,6 +49,9 @@ class DestinosApi {
     if (resposta.statusCode != 201) {
       throw Exception(mensagem['message'] ?? 'Erro ao cadastrar');
     }
-    return mensagem['message'] ?? 'Destino cadastrado!';
+    // tenta pegar o id do lugar novo q vem dentro do "data" (se n vier fica null)
+    final dados = mensagem['data'];
+    final int? idNovo = dados is Map ? int.tryParse('${dados['id']}') : null;
+    return (mensagem['message']?.toString() ?? 'Destino cadastrado!', idNovo);
   }
 }

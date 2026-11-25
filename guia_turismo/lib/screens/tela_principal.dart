@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/controladores/aparencia_controle.dart';
-import 'package:guia_turismo/controladores/login_controle.dart';
-import 'package:guia_turismo/servicos/armazenamento_local.dart';
-import 'package:guia_turismo/telas/tela_destinos.dart';
-import 'package:guia_turismo/telas/tela_foto.dart';
-import 'package:guia_turismo/telas/tela_mapa.dart';
+import 'package:guia_turismo/controllers/aparencia_controle.dart';
+import 'package:guia_turismo/controllers/login_controle.dart';
+import 'package:guia_turismo/services/armazenamento_local.dart';
+import 'package:guia_turismo/screens/tela_destinos.dart';
+import 'package:guia_turismo/screens/tela_favoritos.dart';
+import 'package:guia_turismo/screens/tela_mapa.dart';
 import 'package:provider/provider.dart';
 
 // tela principal, abre dps do login
@@ -22,16 +22,16 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   // conteudo de cada aba, na msm ordem dos botoes la de baixo
   final List<Widget> _abas = const [
     _BoasVindas(),
-    TelaFoto(),
     TelaDestinos(),
+    TelaFavoritos(),
     TelaMapa(),
   ];
 
   // titulo q aparece na appbar p/ cada aba
   final List<String> _titulos = const [
     'Guia Turismo',
-    'Foto do Local',
     'Destinos para Visitar',
+    'Meus Favoritos',
     'Mapa',
   ];
 
@@ -79,14 +79,14 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
             label: 'Início',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.camera_alt_outlined),
-            activeIcon: Icon(Icons.camera_alt),
-            label: 'Câmera',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.place_outlined),
             activeIcon: Icon(Icons.place),
             label: 'Destinos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Favoritos',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map_outlined),

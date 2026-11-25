@@ -31,4 +31,17 @@ class PosicaoGps {
       return null;
     }
   }
+
+  // distancia em linha reta entre o usuario e um lugar, ja formatada p/ mostrar
+  // ex: "350 m" ou "2,4 km". usado nos cards e nos detalhes
+  static String distanciaTexto(LatLng de, double lat, double lon) {
+    final metros = Geolocator.distanceBetween(
+      de.latitude,
+      de.longitude,
+      lat,
+      lon,
+    );
+    if (metros < 1000) return '${metros.round()} m';
+    return '${(metros / 1000).toStringAsFixed(1).replaceAll('.', ',')} km';
+  }
 }

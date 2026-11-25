@@ -1,24 +1,34 @@
-# Guia Turismo — rosa pastel
+# Guia Turismo (rosa)
 
-App Flutter de guia de turismo que usa a API `https://guia.liliaborges.com.br`
-(login, lista e cadastro de destinos), com câmera/galeria, busca por CEP e mapa com GPS.
+app flutter de guia de turismo usando a api `https://guia.liliaborges.com.br`
 
-Login de teste da API: `lilia@teste.com` / `senha123`
+login de teste da api: `lilia@teste.com` / `senha123`
 
-## Como rodar
+## o q tem
+
+- login c/ email e senha (api) e c/ google (firebase), a sessao fica salva e tem botao de sair
+- cadastro de lugares c/ foto (camera ou galeria) e busca por cep
+- mapa (openstreetmap) c/ a localizacao do usuario e um pin p/ cada lugar (c/ a foto dele)
+- distancia ate cada lugar
+- favoritos (ficam salvos no celular)
+- extra: compartilhar o lugar (whatsapp, email...)
+- tema rosa claro e escuro
+
+## como rodar
 
 ```bash
 flutter pub get
 flutter run
 ```
 
-## Estrutura de `lib/`
+o firebase so ta configurado p/ android, entao roda no celular ou emulador
 
-| Pasta / arquivo | O que tem |
+## pastas (lib)
+
+| pasta | o q tem |
 |---|---|
-| `main.dart` | Inicia o app, os controles (Provider) e as rotas |
-| `controladores/` | `login_controle`, `destinos_controle`, `imagem_controle`, `localizacao_controle`, `aparencia_controle` (tema) |
-| `servicos/` | `acesso_api` (login), `destinos_api`, `armazenamento_local`, `busca_cep`, `posicao_gps`, `seletor_imagem` |
-| `modelos/` | `destino_modelo` (destino da API e categorias) |
-| `telas/` | `tela_entrada` (login), `tela_principal` (abas), `tela_foto`, `tela_destinos`, `tela_mapa` |
-| `estilo/` | `estilo_widgets` — aparência rosa de cada componente |
+| `screens/` | telas: entrada (login), principal (abas), destinos, favoritos, mapa |
+| `controllers/` | controles c/ provider: login, destinos, localizacao, imagem, aparencia |
+| `services/` | api, gps, cep, fotos, favoritos, google, compartilhar |
+| `models/` | destino_modelo |
+| `widgets/` | card do lugar, pin do mapa, detalhes, foto e o estilo rosa |

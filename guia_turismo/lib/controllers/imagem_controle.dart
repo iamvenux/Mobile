@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/servicos/seletor_imagem.dart';
+import 'package:guia_turismo/services/seletor_imagem.dart';
 
 // guarda a foto q o usuario tirou ou escolheu da galeria
-// a tela_foto escuta esse controle p/ mostrar a imagem
+// o formulario de cadastro (tela_destinos) escuta esse controle p/ mostrar a imagem
 class ImagemControle extends ChangeNotifier {
   final SeletorImagem _seletor = SeletorImagem(); // servico q abre a camera/galeria
   bool carregando = false;
@@ -28,5 +28,12 @@ class ImagemControle extends ChangeNotifier {
       carregando = false;
       notifyListeners(); // avisa a tela p/ mostrar a foto nova
     }
+  }
+
+  // tira a foto escolhida, o formulario chama isso toda vez q abre
+  // p/ n aparecer a foto do ultimo cadastro
+  void limpar() {
+    _imagem = null;
+    notifyListeners();
   }
 }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/controladores/destinos_controle.dart';
-import 'package:guia_turismo/modelos/destino_modelo.dart';
-import 'package:guia_turismo/servicos/busca_cep.dart';
+import 'package:guia_turismo/controllers/destinos_controle.dart';
+import 'package:guia_turismo/controllers/imagem_controle.dart';
+import 'package:guia_turismo/models/destino_modelo.dart';
+import 'package:guia_turismo/services/busca_cep.dart';
+import 'package:guia_turismo/widgets/card_destino.dart';
 import 'package:provider/provider.dart';
 
 // aba dos destinos: lista os lugares da api e tem o botao + p/ cadastrar um novo
+// o cadastro tem foto (camera ou galeria), q fica salva no celular ligada ao lugar
 class TelaDestinos extends StatefulWidget {
   const TelaDestinos({super.key});
 
@@ -42,6 +45,7 @@ class _TelaDestinosState extends State<TelaDestinos> {
     _latitude.clear();
     _longitude.clear();
     _categoriaId = 1;
+    context.read<ImagemControle>().limpar(); // tira a foto do cadastro anterior
 
     // o formulario eh um modal q sobe de baixo
     showModalBottomSheet(
@@ -72,6 +76,11 @@ class _TelaDestinosState extends State<TelaDestinos> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 20),
+                // foto do lugar: escuta o imagem_controle p/ mostrar a foto escolhida
+                Consumer<ImagemControle>(
+                  builder: (context, imagem, _) => _CaixaFoto(imagem: imagem),
+                ),
+                const SizedBox(height: 16),
                 // nome
                 TextField(
                   controller: _nome,
@@ -183,7 +192,7 @@ class _TelaDestinosState extends State<TelaDestinos> {
     );
   }
 
-  // msm busca de cep da tela_foto, usa o servico busca_cep
+  // busca o cep usando o servico busca_cep (viacep + nominatim) e preenche lat/long
   Future<void> _buscarCep(BuildContext contextoForm) async {
     String mensagem;
     try {
@@ -232,11 +241,12 @@ class _TelaDestinosState extends State<TelaDestinos> {
       categoriaId: _categoriaId,
     );
 
-    // pega o controle antes do await (dps do await o context pode n existir mais)
+    // pega os controles antes do await (dps do await o context pode n existir mais)
     final destinos = context.read<DestinosControle>();
+    final foto = context.read<ImagemControle>().imagem; // foto escolhida (pode ser null)
     atualizar(() => _salvando = true);
-    // chama o controle, ele manda p/ api c/ o token e ja recarrega a lista
-    final deuCerto = await destinos.cadastrarDestino(novo);
+    // chama o controle, ele manda p/ api c/ o token, recarrega a lista e salva a foto
+    final deuCerto = await destinos.cadastrarDestino(novo, foto: foto);
     _salvando = false;
     if (!mounted || !contextoForm.mounted) return; // se fechou a tela ou o form no meio do caminho, para aq
     atualizar(() {});
@@ -249,8 +259,6 @@ class _TelaDestinosState extends State<TelaDestinos> {
 
   @override
   Widget build(BuildContext context) {
-    final cor = Theme.of(context).colorScheme;
-
     return Scaffold(
       // lista: escuta o destinos_controle e mostra conforme o estado dele
       body: Consumer<DestinosControle>(
@@ -288,26 +296,9 @@ class _TelaDestinosState extends State<TelaDestinos> {
               padding: const EdgeInsets.fromLTRB(12, 12, 12, 88), // 88 embaixo p/ o ultimo card n ficar atras do botao +
               itemCount: destinos.destinos.length,
               // ListView.builder monta um card p/ cada destino da lista
-              itemBuilder: (context, indice) {
-                final destino = destinos.destinos[indice];
-                return Card(
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 8,
-                    ),
-                    leading: CircleAvatar(
-                      backgroundColor: cor.primaryContainer,
-                      child: Icon(Icons.place, color: cor.onPrimaryContainer),
-                    ),
-                    title: Text(
-                      destino.nome,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text('Categoria: ${destino.nomeCategoria}'), // nomeCategoria vem do modelo
-                  ),
-                );
-              },
+              // o CardDestino ta na pasta widgets pq a aba favoritos usa ele tbm
+              itemBuilder: (context, indice) =>
+                  CardDestino(destino: destinos.destinos[indice]),
             ),
           );
         },
@@ -319,6 +310,67 @@ class _TelaDestinosState extends State<TelaDestinos> {
         onPressed: _abrirFormulario,
         child: const Icon(Icons.add_location_alt_outlined),
       ),
+    );
+  }
+}
+
+// caixa da foto dentro do formulario c/ os botoes de camera e galeria
+// separei num widget so p/ o formulario n ficar gigante
+class _CaixaFoto extends StatelessWidget {
+  final ImagemControle imagem;
+
+  const _CaixaFoto({required this.imagem});
+
+  @override
+  Widget build(BuildContext context) {
+    final cor = Theme.of(context).colorScheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            height: 160,
+            color: cor.primaryContainer,
+            // 3 opcoes: carregando = bolinha, sem foto = icone, c/ foto = mostra a foto
+            child: imagem.carregando
+                ? const Center(child: CircularProgressIndicator())
+                : imagem.imagem == null
+                    ? Icon(
+                        Icons.add_a_photo_outlined,
+                        size: 56,
+                        color: cor.onPrimaryContainer,
+                      )
+                    : Image.file(
+                        imagem.imagem!,
+                        fit: BoxFit.cover,
+                        cacheWidth: 800, // carrega a foto menor p/ gastar menos memoria
+                      ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        // botoes q chamam o imagem_controle (q chama o servico seletor_imagem)
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: imagem.carregando ? null : imagem.usarCamera,
+                icon: const Icon(Icons.camera_alt),
+                label: const Text('Câmera'),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: imagem.carregando ? null : imagem.usarGaleria,
+                icon: const Icon(Icons.photo_library),
+                label: const Text('Galeria'),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

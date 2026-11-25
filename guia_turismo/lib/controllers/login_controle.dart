@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:guia_turismo/servicos/acesso_api.dart';
-import 'package:guia_turismo/servicos/armazenamento_local.dart';
-import 'package:guia_turismo/servicos/login_google.dart';
+import 'package:guia_turismo/services/acesso_api.dart';
+import 'package:guia_turismo/services/armazenamento_local.dart';
+import 'package:guia_turismo/services/login_google.dart';
 
 // controle do login: email e senha (api da prof) e login c/ google (firebase)
 // a tela_entrada chama as funcoes daq

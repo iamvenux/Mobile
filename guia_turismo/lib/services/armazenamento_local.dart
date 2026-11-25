@@ -40,7 +40,21 @@ class ArmazenamentoLocal {
     return prefs.getString('foto') ?? '';
   }
 
+  // favoritos: salva a lista de ids dos lugares favoritados
+  // (o shared_preferences so guarda lista de texto, por isso converte p/ String e volta)
+  Future<void> salvarFavoritos(Set<int> ids) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('favoritos', ids.map((id) => '$id').toList());
+  }
+
+  Future<Set<int>> pegarFavoritos() async {
+    final prefs = await SharedPreferences.getInstance();
+    final lista = prefs.getStringList('favoritos') ?? [];
+    return lista.map(int.tryParse).whereType<int>().toSet();
+  }
+
   // apaga td qnd o usuario sai
+  // obs: os favoritos e as fotos n apaga, eles ficam no celular
   Future<void> sair() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');

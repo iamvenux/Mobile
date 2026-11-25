@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/estilo/estilo_widgets.dart';
+import 'package:guia_turismo/widgets/estilo_widgets.dart';
 
 // controla o tema do app (rosa claro e rosa escuro) e o botao de trocar
 // as funcoes de estilo de cada componente tao no estilo_widgets.dart

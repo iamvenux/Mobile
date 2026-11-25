@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:guia_turismo/controladores/destinos_controle.dart';
-import 'package:guia_turismo/controladores/localizacao_controle.dart';
+import 'package:guia_turismo/controllers/destinos_controle.dart';
+import 'package:guia_turismo/controllers/localizacao_controle.dart';
+import 'package:guia_turismo/widgets/detalhes_destino.dart';
+import 'package:guia_turismo/widgets/marcador_destino.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 // aba do mapa: mostra onde o usuario ta e um pin p/ cada destino da api
+// o pin mostra a foto do lugar (se tiver) e tocando abre os detalhes
 // eh stateless pq quem guarda as coisas sao os controles
 class TelaMapa extends StatelessWidget {
   const TelaMapa({super.key});
@@ -15,8 +18,6 @@ class TelaMapa extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cor = Theme.of(context).colorScheme;
-
     // Consumer2 escuta 2 controles ao msm tempo:
     // o de localizacao (gps) e o de destinos (p/ fazer os pins)
     return Consumer2<LocalizacaoControle, DestinosControle>(
@@ -43,20 +44,25 @@ class TelaMapa extends StatelessWidget {
                 MarkerLayer(
                   markers: destinos.destinos
                       .map(
-                        (destino) => Marker(
-                          point: LatLng(destino.latitude, destino.longitude),
-                          width: 44,
-                          height: 44,
-                          alignment: Alignment.topCenter, // a ponta do pin fica certinho no lugar
-                          child: Tooltip(
-                            message: destino.nome, // segurando o pin aparece o nome
-                            child: Icon(
-                              Icons.location_on,
-                              size: 44,
-                              color: Color.lerp(cor.primary, Colors.black, 0.25), // rosa um pouco mais escuro p/ aparecer no mapa
+                        (destino) {
+                          final foto = destinos.fotoDe(destino.id);
+                          return Marker(
+                            point: LatLng(destino.latitude, destino.longitude),
+                            width: 52,
+                            height: 52,
+                            // pin normal: a ponta fica no lugar. foto redonda: o meio fica no lugar
+                            alignment: foto == null
+                                ? Alignment.topCenter
+                                : Alignment.center,
+                            // o pin ta na pasta widgets, tocando nele abre os detalhes do lugar
+                            child: MarcadorDestino(
+                              foto: foto,
+                              favorito: destinos.ehFavorito(destino.id),
+                              aoTocar: () =>
+                                  mostrarDetalhesDestino(context, destino),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       )
                       .toList(),
                 ),

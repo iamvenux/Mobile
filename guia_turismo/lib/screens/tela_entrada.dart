@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:guia_turismo/controladores/login_controle.dart';
+import 'package:guia_turismo/controllers/login_controle.dart';
 import 'package:provider/provider.dart';
 
 // tela de login, eh a 1a tela q abre se ninguem ta logado
